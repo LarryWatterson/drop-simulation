@@ -11,13 +11,7 @@ ACMD(do_drop)
 
 	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
 
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: drop_simul <mob vnum> <count>");
-		return;
-	}
-	
-	if (!*arg2)
+	if (!*arg1 || !*arg2)
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: drop_simul <mob vnum> <count>");
 		return;
@@ -47,30 +41,30 @@ ACMD(do_drop)
 
 	if (ITEM_MANAGER::instance().CreateMobDropVec(vnum, drop_vec))
 	{
-			for (const auto& item : drop_vec)
-			{
-				if (!item) { continue; }
-				
-				const auto itemVnum = item->GetVnum();
-				const auto itemCount = item->GetCount();
-				
-				if (itemVnum == 0 || itemCount == 0) { continue; }
+		for (const auto& item : drop_vec)
+		{
+			if (!item) { continue; }
 			
-				const auto& it = dropMap.find(itemVnum);
-				if (it != dropMap.end())
-				{
-					it->second.count += itemCount;
-				}
-				else
-				{
-					DropItem dropItem{};
-					dropItem.count = itemCount;
-					strlcpy(dropItem.szName, item->GetName(), sizeof(dropItem.szName));
-					dropMap[itemVnum] = dropItem;
-				}
-
-				M2_DESTROY_ITEM(item);
+			const auto itemVnum = item->GetVnum();
+			const auto itemCount = item->GetCount();
+			
+			if (itemVnum == 0 || itemCount == 0) { continue; }
+		
+			const auto& it = dropMap.find(itemVnum);
+			if (it != dropMap.end())
+			{
+				it->second.count += itemCount;
 			}
+			else
+			{
+				DropItem dropItem{};
+				dropItem.count = itemCount;
+				strlcpy(dropItem.szName, item->GetName(), sizeof(dropItem.szName));
+				dropMap[itemVnum] = dropItem;
+			}
+
+			M2_DESTROY_ITEM(item);
+		}
 
 		ch->ChatPacket(CHAT_TYPE_PARTY, "############### |cFF6d8cf2|H|h(%d)x %s|h|r DROP SIMULATION ###############", loopCount, mob->m_table.szLocaleName);
 
