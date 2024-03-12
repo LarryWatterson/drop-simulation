@@ -36,12 +36,12 @@ ACMD(do_drop)
 	}
 
 
-	std::vector<LPITEM> drop_vec;
+	std::vector<LPITEM> dropVec;
 	std::unordered_map<DWORD/*vnum*/, DropItem> dropMap;
 
-	if (ITEM_MANAGER::instance().CreateMobDropVec(vnum, drop_vec))
+	if (ITEM_MANAGER::instance().CreateMobDropVec(vnum, dropVec))
 	{
-		for (const auto& item : drop_vec)
+		for (const auto& item : dropVec)
 		{
 			if (!item) { continue; }
 			
