@@ -66,7 +66,7 @@ ACMD(do_drop)
 					DropItem dropItem{};
 					dropItem.count = itemCount;
 					strlcpy(dropItem.szName, item->GetName(), sizeof(dropItem.szName));
-					dropMap.emplace(itemVnum, dropItem);
+					dropMap[itemVnum] = dropItem;
 				}
 
 				M2_DESTROY_ITEM(item);
